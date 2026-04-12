@@ -2,149 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Resume Analyzer | CareerHub</title>
+  <title>Upload Your Resume | CareerLens.ai</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.js"></script>
   <style>
-    body { background-color: #f4f6f9; }
-    .card { border-radius: 15px; margin-bottom: 20px; }
-    .card-header { border-radius: 15px 15px 0 0; }
-    h3, h4, h5 { font-weight: 600; }
-    ul { margin: 0; padding-left: 20px; }
-    .btn-lg { border-radius: 30px; }
-    .progress { height: 25px; border-radius: 20px; }
-    .alert { border-radius: 12px; }
-    .badge-skill { margin: 3px; font-size: 0.9em; }
-    .section-title { margin-bottom: 10px; }
+    body {
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .upload-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+    }
+
+    .upload-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .upload-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .upload-card h2 {
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #2563eb;
+    }
+
+    .upload-card p {
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .form-control {
+      border-radius: 50px;
+      padding: 15px 20px;
+    }
+
+    .btn-upload {
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .alert {
+      margin-top: 20px;
+      border-radius: 12px;
+    }
+
+    .icon-upload {
+      font-size: 50px;
+      color: #2563eb;
+      margin-bottom: 15px;
+    }
+
+    .small-text {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    /* Loader Overlay */
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
+
+    .loader-spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #2563eb;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1.5s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
   </style>
 </head>
 <body>
 
-<div class="container mt-5 mb-5">
-  <div class="card shadow-lg border-0">
-    <div class="card-header bg-primary text-white text-center py-3">
-      <h3 class="mb-0">📄 Resume Analyzer</h3>
-      <small>Upload your resume and get instant ATS-based insights</small>
-    </div>
-    <div class="card-body p-4">
+<div class="upload-container">
+  <div class="upload-card">
 
-      <!-- Upload Form -->
-      <form action="{{ url_for('resume') }}" method="POST" enctype="multipart/form-data" class="mb-4">
-        <div class="row g-2">
-          <div class="col-md-10">
-            <input type="file" name="resume" accept=".pdf,.docx" class="form-control" required>
-          </div>
-          <div class="col-md-2 d-grid">
-            <button type="submit" class="btn btn-primary btn-lg">Analyze</button>
-          </div>
-        </div>
-      </form>
+    <i class="bi bi-file-earmark-arrow-up icon-upload"></i>
+    <h2>Upload Your Resume</h2>
+    <p class="small-text">Supported formats: <b>PDF</b>, <b>DOCX</b></p>
 
-      <!-- Error -->
-      {% if error %}
-      <div class="alert alert-danger text-center">
-        ⚠️ {{ error }}
-      </div>
-      {% endif %}
-
-      {% if resume_score %}
-      <!-- Overall Score -->
-      <div class="card mb-3">
-        <div class="card-body text-center">
-          <h4 class="section-title">Overall Resume Score: 
-            <span class="text-success fw-bold">{{ resume_score }}/100</span>
-          </h4>
-          <div class="progress mb-3">
-            <div class="progress-bar bg-success fw-bold" role="progressbar"
-                 style="width: {{ resume_score }}%;" aria-valuenow="{{ resume_score }}"
-                 aria-valuemin="0" aria-valuemax="100">
-              {{ resume_score }}%
-            </div>
-          </div>
-        </div>
+    <!-- Upload Form -->
+    <form id="resumeForm" action="{{ url_for('upload_resume') }}" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <input type="file" name="resume" accept=".pdf,.docx" class="form-control" required>
       </div>
 
-      <!-- Feedback -->
-      {% if feedback %}
-      <div class="card mb-3">
-        <div class="card-header bg-info text-white">
-          📌 Feedback & Suggestions
-        </div>
-        <div class="card-body">
-          <ul>
-            {% for f in feedback %}
-              <li>{{ f }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-      {% endif %}
+      <button type="submit" class="btn btn-primary btn-upload w-100">Analyze Resume</button>
+    </form>
 
-      <!-- Skills -->
-      {% if extracted_skills %}
-      <div class="card mb-3">
-        <div class="card-header bg-success text-white">
-          ✅ Skills Detected
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-3">
+          {{ message }}
         </div>
-        <div class="card-body">
-          {% for skill in extracted_skills %}
-            <span class="badge bg-success badge-skill">{{ skill }}</span>
-          {% endfor %}
-        </div>
-      </div>
+        {% endfor %}
       {% endif %}
+    {% endwith %}
 
-      <!-- Sections Found -->
-      {% if sections_found %}
-      <div class="card mb-3">
-        <div class="card-header bg-dark text-white">
-          📂 Sections Identified
-        </div>
-        <div class="card-body">
-          <ul>
-            {% for sec in sections_found %}
-              <li>{{ sec.capitalize() }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-      {% endif %}
+    <p class="small-text mt-3">
+      After uploading, you'll get instant insights on your skills, strengths, and improvement areas.
+    </p>
 
-      <!-- Achievements -->
-      {% if achievements %}
-      <div class="card mb-3">
-        <div class="card-header bg-secondary text-white">
-          🏆 Achievements Detected
-        </div>
-        <div class="card-body">
-          <ul>
-            {% for ach in achievements %}
-              <li>{{ ach }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-      {% endif %}
-
-      <!-- Contact Info -->
-      {% if resume_data.contact %}
-      <div class="card mb-3">
-        <div class="card-header bg-warning text-dark">
-          📧 Contact Information
-        </div>
-        <div class="card-body">
-          <ul class="mb-0">
-            {% for key, val in resume_data.contact.items() %}
-              {% if val %}<li><b>{{ key|capitalize }}:</b> {{ val }}</li>{% endif %}
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-      {% endif %}
-      {% endif %}
-
-    </div>
   </div>
 </div>
+
+<!-- Loader Overlay -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader-spinner"></div>
+  <p>Analyzing your resume... <br> This may take a few seconds.</p>
+</div>
+
+<script>
+  const form = document.getElementById('resumeForm');
+  const loader = document.getElementById('loaderOverlay');
+  form.addEventListener('submit', function() { loader.style.display = 'flex'; });
+</script>
 
 </body>
 </html>

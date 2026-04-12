@@ -2,158 +2,373 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CareerHub.ai Dashboard</title>
+  <title>CareerLens.ai Dashboard</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #eef2f7, #f9fbfd);
+      background: #ffffff;
       margin: 0;
-      padding: 0;
-      position: relative;
     }
 
-    /* Subtle background image on the right */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; right: 0;
-      width: 300px; height: 100%;
-      background: url('https://images.unsplash.com/photo-1581091870622-5f053a64f312?auto=format&fit=crop&w=400&q=80') no-repeat top right;
-      background-size: contain;
-      opacity: 0.05;
-      pointer-events: none;
+    /* Layout */
+    .dashboard {
+      display: flex;
+      min-height: 100vh;
     }
 
-    .header {
-      background: linear-gradient(90deg, #1a73e8, #673ab7);
-      color: white;
-      text-align: center;
-      padding: 50px 20px;
-      border-bottom-left-radius: 30px;
-      border-bottom-right-radius: 30px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    .header h1 { font-size: 30px; margin-bottom: 10px; }
-    .header p { font-size: 18px; opacity: 0.9; }
-
-    .dashboard-container { 
-      display: flex; 
-      flex-wrap: wrap; 
-      justify-content: center; 
-      margin: 40px auto; 
-      gap: 30px; 
-      max-width: 1200px; 
-    }
-
-    /* Resume / Logout Buttons */
-    .btn-section { display: flex; gap: 20px; justify-content: center; margin-bottom: 40px; }
-    .btn-main { 
-      padding: 20px 35px; 
-      font-size: 18px; 
-      border-radius: 15px; 
-      transition: transform 0.3s, box-shadow 0.3s; 
-    }
-    .btn-main:hover { 
-      transform: scale(1.05); 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2); 
-    }
-
-    /* Info Boxes */
-    .info-box {
-      flex: 1 1 300px;
-      background: rgba(255, 255, 255, 0.075);
-      border-radius: 20px;
+    /* Sidebar */
+    .sidebar {
+      width: 270px;
+      background: linear-gradient(180deg, #19295f, #704fa8);
+      color: #fff;
       padding: 30px 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
       position: relative;
-      cursor: pointer;
-    }
-    .info-box:hover { 
-      transform: translateY(-5px); 
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15); 
-    }
-    .info-box h3 { 
-      color: #1a73e8; 
-      margin-bottom: 15px; 
-      font-size: 22px; 
-      display: flex; 
-      align-items: center; 
-    }
-    .info-box h3 i { margin-right: 10px; font-size: 26px; }
-    .info-box p { font-size: 16px; color: #555; }
-
-    /* Locked State */
-    .locked { 
-      opacity: 0.6; 
-      font-style: italic; 
-      cursor: not-allowed; 
-      filter: blur(0.5px); 
     }
 
+    .sidebar h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      text-align:center;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .top-bar {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .top-bar h1 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .top-bar p {
+      color: #555;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+    }
+
+    .card-box {
+      background: #f8f9fa;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.171);
+      transition: 0.3s ease;
+      position: relative;
+      min-height: 200px;
+    }
+
+    .card-box:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.534);
+    }
+
+    .card-box i {
+      font-size: 34px;
+      color: #2563eb;
+      margin-bottom: 15px;
+    }
+
+    .card-box h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: black;
+    }
+
+    .card-box p,
+    .card-box li,
+    .card-box span {
+      font-size: 15px;
+      color: #000;
+    }
+
+    /* Locked cards styling */
+    .card-box.locked {
+      opacity: 0.55;
+      filter: grayscale(0.6);
+      cursor: not-allowed;
+    }
+
+    /* Ensure text is fully visible inside locked cards */
+    .card-box.locked h3,
+    .card-box.locked p,
+    .card-box.locked li,
+    .card-box.locked span {
+      color: black !important;
+      opacity: 1;
+    }
+
+    /* Dim icons in locked cards */
+    .card-box.locked i {
+      color: #aaa !important;
+    }
+
+    /* Sidebar menu */
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 17px;
+      margin-bottom: 10px;
+      position: relative;
+      transition: 0.3s ease;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Lock icon and tooltip */
+    .menu-item.locked::after {
+      content: "Upload resume to unlock";
+      position: absolute;
+      left: 105%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #333;
+      color: #fff;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 10;
+    }
+
+    .menu-item.locked:hover::after {
+      opacity: 1;
+    }
+
+    .menu-item.locked i {
+      color: #aaa;
+    }
+
+    .menu-item.locked {
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-item.locked .lock-icon {
+      color: #aaa;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    /* Logout link */
+    .logout-link {
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      background: red;
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      transition: 0.3s;
+      display: block;
+      margin-top: 30px;
+      position: absolute;
+      bottom: 220px;       
+      left: 20px;          
+      right: 20px;         
+    }
+
+    .logout-link:hover {
+      background: rgba(197, 23, 23, 0.884);
+    }
+
+    /* Progress bar */
+    .progress {
+      height: 20px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
+<div class="dashboard">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<h2>CareerLens.ai</h2>
+
+  <a href="{{ url_for('dashboard') }}" class="menu-item active">
+    <i class="bi bi-speedometer2"></i>
+    <span>Dashboard</span>
+  </a>
+
+  <a href="{{ url_for('resume') }}" class="menu-item">
+    <i class="bi bi-file-earmark-text"></i>
+    <span>Resume Analyzer</span>
+  </a>
+
+  <div class="menu-item locked" title="Upload resume to unlock">
+    <i class="bi bi-briefcase"></i>
+    <span class="locked-text">Job Fit Analysis</span>
+    <i class="bi bi-lock-fill lock-icon"></i>
+  </div>
+
+  <div class="menu-item locked" title="Upload resume to unlock">
+    <i class="bi bi-book"></i>
+    <span class="locked-text">Role Insights</span>
+    <i class="bi bi-lock-fill lock-icon"></i>
+  </div>
+
+  <div class="menu-item locked" title="Upload resume to unlock">
+    <i class="bi bi-book"></i>
+    <span class="locked-text">Companies</span>
+    <i class="bi bi-lock-fill lock-icon"></i>
+  </div>
+
+  <a href="{{ url_for('logout') }}" class="logout-link">
+    <i class="bi bi-box-arrow-right"></i> Logout
+  </a>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <div class="top-bar">
     <h1>Welcome, {{ user }} 👋</h1>
-
-    {% set quotes = [
-      "Unlock. Learn. Succeed.",
-      "Your career, upgraded.",
-      "Dream. Prepare. Achieve.",
-      "Skills today, jobs tomorrow.",
-      "Future-ready, now."
-    ] %}
-
-    {% if resume_uploaded %}
-      <p>"{{ quotes|random }}"</p>
+    {% if resume_data %}
+      <p>Your dashboard is unlocked. Let’s move forward 🚀</p>
     {% else %}
-      <p>Upload your resume to unlock job recommendations, learning paths, and interview prep schedules.</p>
+      <p class="text-muted mt-3">Upload your resume to unlock all career tools.</p>
     {% endif %}
   </div>
 
-  <div class="btn-section">
-    <a href="/resume" class="btn btn-primary btn-main"><i class="bi bi-file-earmark-text"></i> Resume Analyzer</a>
-    <a href="/logout" class="btn btn-danger btn-main"><i class="bi bi-door-closed"></i> Logout</a>
-  </div>
-
-  <div class="dashboard-container">
-    <!-- Job Recommendations -->
-    <div class="info-box {% if not resume_uploaded %}locked{% endif %}" 
-         {% if resume_uploaded %}onclick="window.location='/job_matching'"{% endif %}>
-      <h3><i class="bi bi-briefcase"></i> Job Recommendations</h3>
-      {% if resume_uploaded %}
-        <p>View personalized job suggestions based on your resume and skills.</p>
-      {% else %}
-        <p>Upload your resume to unlock personalized job recommendations.</p>
-      {% endif %}
+  {% if not resume_data %}
+  <div class="cards">
+    <div class="card-box locked">
+      <i class="bi bi-speedometer2"></i>
+      <h3>Resume Score</h3>
+      <p>--/100</p>
+      <p>Your resume will be scored on structure, skills, and relevance to help you stand out to recruiters.</p>
+      <div class="progress">
+        <div class="progress-bar bg-success" style="width:0%;"></div>
+      </div>
     </div>
 
-    <!-- Learning Paths -->
-    <div class="info-box {% if not resume_uploaded %}locked{% endif %}" 
-         {% if resume_uploaded %}onclick="window.location='/learning_path/Python Developer'"{% endif %}>
-      <h3><i class="bi bi-book"></i> Learning Paths</h3>
-      {% if resume_uploaded %}
-        <p>Access curated learning paths to enhance your skills for matched roles.</p>
-      {% else %}
-        <p>Upload your resume to unlock recommended learning paths.</p>
-      {% endif %}
+    <div class="card-box locked">
+      <i class="bi bi-award"></i>
+      <h3>Skills Detected</h3>
+      <p>See the key skills your resume highlights and areas you can strengthen for better role matches.</p>
     </div>
 
-    <!-- Interview Prep -->
-    <div class="info-box {% if not resume_uploaded %}locked{% endif %}" 
-         {% if resume_uploaded %}onclick="window.location='/prep_schedule/Python Developer/10days'"{% endif %}>
-      <h3><i class="bi bi-pencil-square"></i> Interview Prep</h3>
-      {% if resume_uploaded %}
-        <p>Generate your AI-powered interview prep schedule.</p>
-      {% else %}
-        <p>Upload your resume to unlock interview preparation schedules.</p>
-      {% endif %}
+    <div class="card-box locked">
+      <i class="bi bi-info-circle"></i>
+      <h3>Feedback & Suggestions</h3>
+      <p>Get personalized tips to improve your resume, highlight strengths, and boost your chances of getting shortlisted.</p>
+    </div>
+
+    <div class="card-box locked">
+      <i class="bi bi-building"></i>
+      <h3>Companies & Guidance</h3>
+      <p>Discover top companies hiring for your profile and get guidance on applying effectively.</p>
     </div>
   </div>
+  {% else %}
+  <div class="cards">
+    <!-- Resume Score -->
+    <div class="card-box">
+      <i class="bi bi-speedometer2"></i>
+      <h3>Resume Score</h3>
+      <p>{{ resume_data.score }}/100</p>
+      <div class="progress">
+        <div class="progress-bar bg-success" style="width: {{ resume_data.score }}%;"></div>
+      </div>
+    </div>
 
+    <!-- Skills Detected -->
+    <div class="card-box">
+      <i class="bi bi-award"></i>
+      <h3>Skills Detected</h3>
+      <p>
+        {% for skill in resume_data.strengths %}
+          <span class="badge bg-success">{{ skill }}</span>
+        {% endfor %}
+      </p>
+    </div>
+
+    <!-- Feedback & Suggestions -->
+    {% if resume_data.improvements %}
+    <div class="card-box">
+      <i class="bi bi-info-circle"></i>
+      <h3>Feedback & Suggestions</h3>
+      <ul>
+        {% for f in resume_data.improvements %}
+          <li>{{ f }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Career Insights -->
+    {% if resume_data.career_insights %}
+    <div class="card-box">
+      <i class="bi bi-briefcase"></i>
+      <h3>Career Insights</h3>
+      <ul>
+        {% for insight in resume_data.career_insights %}
+          <li>{{ insight }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Companies & Guidance -->
+    <div class="card-box">
+      <i class="bi bi-building"></i>
+      <h3>Companies & Guidance</h3>
+      {% if resume_data.companies %}
+        <ul>
+          {% for company in resume_data.companies[:5] %}
+            <li>{{ company.name }} - {{ company.role }}</li>
+          {% endfor %}
+        </ul>
+        {% if resume_data.companies|length > 5 %}
+          <small>+{{ resume_data.companies|length - 5 }} more companies</small>
+        {% endif %}
+      {% else %}
+        <p>No company recommendations available yet.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+</main>
+</div>
 </body>
 </html>

@@ -2,186 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CareerHub.ai - AI Powered Career Hub</title>
+  <title>CareerLens.ai - Resume Parsing & Career Guidance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
     body {
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
-      color: #fff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
-    /* Navigation Bar */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 40px;
-      background: rgba(0,0,0,0.3);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    /* NAVBAR */
+    .navbar {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    nav h1 {
+    .navbar-brand {
+      font-weight: 700;
       font-size: 1.8rem;
-      font-weight: bold;
-    }
-    nav .buttons a {
-      margin-left: 15px;
-      text-decoration: none;
-      color: #fff;
-      background: #ff9800;
-      padding: 8px 16px;
-      border-radius: 25px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-    nav .buttons a:hover {
-      background: #ff5722;
+      color: #512da8 !important;
     }
 
-    /* Hero Section */
+    /* HERO */
     .hero {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      background: linear-gradient(135deg, #8b1668, #703ef8);
+      color: white;
+      padding: 200px 20px 150px;
       text-align: center;
-      padding: 100px 20px;
     }
-    .hero h2 {
-      font-size: 2.8rem;
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
       margin-bottom: 20px;
-      animation: fadeInDown 1s ease;
     }
     .hero p {
       font-size: 1.2rem;
-      max-width: 800px;
-      line-height: 1.6;
-      margin-bottom: 30px;
-      animation: fadeInUp 1.5s ease;
+      opacity: 0.9;
+      max-width: 700px;
+      margin: 0 auto 30px;
     }
-    .hero .cta {
-      display: flex;
-      gap: 20px;
-    }
-    .hero .cta a {
-      text-decoration: none;
-      padding: 12px 25px;
-      font-size: 1rem;
-      border-radius: 30px;
-      font-weight: bold;
+    .btn-main {
+      background:#57158d;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-weight: 600;
+      color: white;
+      border: none;
       transition: 0.3s;
     }
-    .hero .cta .start {
-      background: #ff5722;
+    .btn-main:hover { background: #450f6b; }
+    .btn-outline-light { 
       color: white;
+      border-color: white;
     }
-    .hero .cta .start:hover {
-      background: #e64a19;
-    }
-    .hero .cta .learn {
-      background: #03a9f4;
-      color: white;
-    }
-    .hero .cta .learn:hover {
-      background: #0288d1;
-    }
-
-    /* Features Section */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      padding: 60px 40px;
+    .btn-outline-light:hover {
       background: white;
-      color: #333;
+      color: #512da8;
     }
-    .feature {
-      background: #f4f6ff;
+
+    /* FEATURES */
+    .features-section {
+      background: #f8f9ff;
+      padding: 80px 20px;
+    }
+    .feature-card {
+      border: none;
       border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       transition: 0.3s;
-    }
-    .feature:hover {
-      transform: translateY(-8px);
-    }
-    .feature h3 {
-      color: #4e54c8;
-      margin-bottom: 10px;
-    }
-
-    /* Footer */
-    footer {
+      padding: 30px 20px;
       text-align: center;
-      padding: 20px;
-      background: rgba(0,0,0,0.4);
-      color: #ddd;
-      font-size: 0.9rem;
+      height: 260px;
+    }
+    .feature-card:hover { transform: translateY(-8px); }
+    .feature-card h5 { margin-top: 15px; font-weight: 600; }
+    .feature-card p { font-size: 0.95rem; margin-top: 8px; }
+
+    /* HOW IT WORKS */
+    .steps {
+      background: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .step-icon { font-size: 45px; color: #512da8; }
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, #9c209c, #276ab6);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .cta .btn { margin-top: 20px; }
+
+    /* FOOTER */
+    footer {
+      background: #111;
+      color: #aaa;
+      padding: 25px;
+      text-align: center;
     }
 
-    /* Animations */
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+.steps h2 {
+  color: #fff; /* Text color */
+  background: linear-gradient(90deg, #b12787, #703ef8); /* Gradient background */
+  display:inline-flexbox; /* Wrap width around text */
+  padding: 12px 25px; /* Space inside */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Optional shadow */
+  transition: 0.3s;
+}
+
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <h1>CareerHub.ai</h1>
-    <div class="buttons">
-      <a href="{{ url_for('login') }}">Login</a>
-      <a href="{{ url_for('register') }}">Register</a>
-    </div>
-  </nav>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg px-4">
+  <a class="navbar-brand" href="{{ url_for('home') }}">CareerLens.ai</a>
+  <div class="ms-auto">
+    <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
+    <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
+  </div>
+</nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h2>Your AI-Powered Career Companion</h2>
-    <p>
-      The AI-Powered Career Hub is an intelligent platform designed to assist students, job seekers, 
-      and professionals in planning and advancing their careers. From resume checking to interview 
-      guidance, job matching, and personalized learning roadmaps — CareerHub.ai is your all-in-one 
-      solution for success.
-    </p>
-    <div class="cta">
-      <a href="{{ url_for('register') }}" class="start">Get Started</a>
-      <a href="#features" class="learn">Learn More</a>
-    </div>
-  </section>
+<!-- HERO -->
+<section class="hero">
+  <h1>Resume Parsing & Career Guidance</h1>
+  <p>Automated Resume Analysis & Career Guidance System helps users improve resumes, analyze skills, and receive personalized career recommendations.</p>
+  <a href="{{ url_for('register') }}" class="btn btn-outline-light ms-2">Get Started</a>
+  <a href="#features-section" class="btn btn-outline-light ms-2"" id="exploreBtn">Explore Features</a>
+  
+</section>
 
-  <!-- Features Section -->
-  <section id="features" class="features">
-    <div class="feature">
-      <h3>📄 Resume Analyzer</h3>
-      <p>Get instant feedback on your resume's content, formatting, and clarity.</p>
-    </div>
-    <div class="feature">
-      <h3>🎯 Career Roadmap</h3>
-      <p>AI suggests career paths and highlights skill gaps for improvement.</p>
-    </div>
-    <div class="feature">
-      <h3>💼 Job Matching</h3>
-      <p>Find jobs aligned with your skills and rank opportunities smartly.</p>
-    </div>
-    <div class="feature">
-      <h3>🎤 Interview Prep</h3>
-      <p>Practice with AI-powered questions and improve your confidence.</p>
-    </div>
-  </section>
+<!-- FEATURES -->
+ 
+<section id="features-section" class="features-section">
+  <div class="container py-5">
+    <div class="row g-4 text-center">
+    <h1>Features</h1>
+      <div class="col-md-4">
+        <div class="card feature-card">
+          <i class="bi bi-robot fs-1 text-primary"></i>
+          <h5>AI Resume Analysis</h5>
+          <p>Automatically analyzes resumes and extracts skills, experience, and qualifications.</p>
+        </div>
+      </div>
 
-  <!-- Footer -->
-  <footer>
-    © 2025 CareerHub.ai | Empowering Your Career with AI
-  </footer>
+      <div class="col-md-4">
+        <div class="card feature-card">
+          <i class="bi bi-graph-up fs-1 text-success"></i>
+          <h5>Personalized Career Guidance</h5>
+          <p>Recommends suitable career paths and job roles based on resume data.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card feature-card">
+          <i class="bi bi-file-earmark-text fs-1 text-danger"></i>
+          <h5>Resume Scoring & Feedback</h5>
+          <p>Provides resume score, strengths, and improvement suggestions.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps">
+  <h2 class="fw-bold mb-5">How It Works</h2>
+  <div class="row">
+
+    <div class="col-md-4">
+      <i class="bi bi-upload step-icon"></i>
+      <h5 class="mt-3">Upload Resume</h5>
+      <p>Upload your resume in PDF or DOC format.</p>
+    </div>
+
+    <div class="col-md-4">
+      <i class="bi bi-gear step-icon"></i>
+      <h5 class="mt-3">AI Analysis</h5>
+      <p>Our AI analyzes your resume and provides insights.</p>
+    </div>
+
+    <div class="col-md-4">
+      <i class="bi bi-rocket step-icon"></i>
+      <h5 class="mt-3">Get Recommendations</h5>
+      <p>Receive career suggestions and improvement tips instantly.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Ready to Improve Your Career?</h2>
+  <a href="{{ url_for('register') }}" class="btn btn-light px-4">Create Account</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 CareerLens.ai | Automated Resume Analysis & Career Guidance
+</footer>
+
+<!-- SCRIPT TO PREVENT AUTO-SCROLL ON REFRESH -->
+<script>
+document.getElementById('exploreBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    const target = document.getElementById('features-section');
+    target.scrollIntoView({behavior: 'smooth'});
+    history.replaceState(null, null, ' '); // remove hash to prevent auto-scroll on refresh
+});
+</script>
 
 </body>
 </html>

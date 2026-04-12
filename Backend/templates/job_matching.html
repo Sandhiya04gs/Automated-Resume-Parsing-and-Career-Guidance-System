@@ -1,74 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Job Matching Results</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(120deg, #6a11cb 0%, #2575fc 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
-    }
-    .container { margin-top: 40px; margin-bottom: 60px; }
-    .card {
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-      transition: transform 0.2s ease-in-out;
-    }
-    .card:hover { transform: translateY(-6px); }
-    .match-score { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
-    .missing-skills { color: #c0392b; font-size: 0.95rem; }
-    .perfect-match { color: #27ae60; font-weight: 600; }
-    .page-header { font-size: 2rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
-    .btn-custom { border-radius: 30px; padding: 10px 20px; font-weight: 600; }
-  </style>
-</head>
-<body>
-<div class="container">
-  <h2 class="text-center mb-5 page-header">🔍 Job Matching Results</h2>
+<meta charset="UTF-8">
+<title>Job Matching Results</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% if role_matches %}
-  <div class="row">
-    {% for job in role_matches %}
-    <div class="col-md-6 mb-4">
-      <div class="card p-4 bg-light text-dark">
-        <h4 class="mb-2">{{ job.title }}</h4>
-        <p class="match-score">Match Score: {{ job.match_score }}%</p>
-        <div class="progress mb-3">
-          <div class="progress-bar
-            {% if job.match_score >= 75 %}bg-success
-            {% elif job.match_score >= 50 %}bg-warning
-            {% else %}bg-danger{% endif %}"
-            role="progressbar" style="width: {{ job.match_score }}%">
-          </div>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    background: linear-gradient(135deg, #4e72dfc7,#1cc889dc);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+}
+
+.dashboard{
+    margin-top: 50px;
+    margin-bottom: 60px;
+}
+
+.page-title{
+    font-weight:600;
+    font-size:26px;
+    color:#1e293b;
+}
+
+.summary-box{
+    background:white;
+    border-radius:16px;
+    padding:20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    margin-bottom:30px;
+}
+
+.card-custom{
+    border:none;
+    border-radius:20px;
+    background:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    transition:0.3s ease;
+}
+
+.card-custom:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.08);
+}
+
+.job-icon{
+    width:65px;
+    height:65px;
+    background:#eef2ff;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin-right:15px;
+}
+
+.match-score{
+    font-size:14px;
+    font-weight:600;
+    color:#64748b;
+}
+
+.progress{
+    height:8px;
+    border-radius:20px;
+}
+
+.badge-skill{
+    background:#eef2ff;
+    color:#4e73df;
+    padding:6px 12px;
+    border-radius:20px;
+    margin:4px;
+    display:inline-block;
+    font-size:12px;
+}
+
+/* Normal button */
+/* Normal button */
+.btn-primary.action-btn {
+    background: linear-gradient(135deg, #4e73df, #06b6d4); /* normal gradient */
+    color: white;
+    border: none;
+    text-decoration: none;   /* remove underline */
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect */
+.btn-primary.action-btn:hover {
+    color: white;
+    background: linear-gradient(135deg, #2563eb, #06b6d4); /* brighter gradient on hover */
+    box-shadow: 0 0 20px rgba(62, 147, 255, 0.7), 0 0 40px rgba(62, 146, 255, 0.849); /* glowing effect */
+    transform: translateY(-2px);  /* slight lift */
+}
+
+
+.perfect-match{
+    background:#20e6c5;
+    color:#166534;
+    padding:8px 14px;
+    border-radius:12px;
+    display:inline-block;
+    font-size:13px;
+}
+
+/* General action buttons */
+.action-btn {
+    border-radius: 30px;
+    padding: 15px 30px;
+    font-weight: 500;
+    color:black;                     /* White text */
+    background-color:white; /* Semi-dark background to stand out */
+    border: none;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+/* Hover effect */
+.action-btn:hover {
+            /* White bg on hover */
+    color:black;           
+    background-color:#4e72dfb0;        /* Text color matches main gradient color */
+}
+
+/* Logout button */
+.btn-danger {
+    background-color: #dc2626;       /* Solid red */
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;       /* Darker red on hover */
+}
+
+.btn-primary{
+    background: linear-gradient(135deg,#4e73df,#06b6d4);
+    border:none;
+}
+
+.btn-primary:hover{
+    opacity:0.2;
+    background-color: darkblue;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container dashboard">
+
+<!-- HEADER -->
+<div class="text-center mb-4">
+    <h3 class="page-title">🔍 Job Matching Results</h3>
+    <p class="text-muted">AI suggested roles based on your resume analysis</p>
+</div>
+
+{% if role_matches %}
+
+<!-- SUMMARY -->
+<div class="summary-box text-center">
+    <h6>{{ role_matches|length }} Roles Found</h6>
+
+    {% if highest_match %}
+    <p class="text-muted mb-0">
+        Highest Match:
+        <strong>{{ highest_match.title }}</strong>
+        ({{ highest_match.match_score }}%)
+    </p>
+    {% endif %}
+</div>
+
+<!-- JOB CARDS -->
+{% for job in role_matches %}
+<div class="card card-custom p-4 mb-4">
+
+    <div class="row align-items-center">
+
+        <!-- LEFT SECTION -->
+        <div class="col-md-8 d-flex">
+
+            <div class="job-icon">
+                💻
+            </div>
+
+            <div>
+                <h5 class="mb-1">{{ job.title }}</h5>
+
+                <p class="text-muted small mt-2 mb-2">
+                    {{ job.description or "Build and maintain scalable applications while collaborating with cross-functional teams." }}
+                </p>
+
+                <div class="match-score">
+                    Match Score: {{ job.match_score }}%
+                </div>
+
+                {% if job.missing_skills %}
+                    <div class="mt-2">
+                        <strong class="text-muted small">Missing Skills:</strong><br>
+                        {% for skill in job.missing_skills %}
+                            <span class="badge-skill">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="perfect-match mt-2">
+                        🎉 Perfect Match! All skills found.
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
-        {% if job.missing_skills %}
-        <p class="missing-skills"><b>Missing Skills:</b> {{ job.missing_skills|join(", ") }}</p>
-        {% else %}
-        <p class="perfect-match">🎉 Perfect Match! All required skills found.</p>
-        {% endif %}
+        <!-- RIGHT SECTION -->
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
 
-        <!-- ✅ Direct link to learning path -->
-        <a href="{{ url_for('role_learning_path', role=job.title, page=1) }}" 
-           class="btn btn-info btn-custom mt-3">📚 Learning Path</a>
+            <div class="mb-3">
+                <div class="progress">
+                    <div class="progress-bar 
+                        {% if job.match_score >= 75 %}bg-success
+                        {% elif job.match_score >= 50 %}bg-warning
+                        {% else %}bg-danger{% endif %}"
+                        style="width: {{ job.match_score }}%">
+                    </div>
+                </div>
+            </div>
 
-      </div>
+            <a href="{{ url_for('job_detail', role=job.title|replace(' ', '_') ) }}" 
+               class="btn btn-primary action-btn">
+               View Job Details
+            </a>
+
+        </div>
+
     </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="alert alert-warning text-center shadow-lg rounded-4">
-    ⚠️ No job matches found. Please upload a resume first.
-  </div>
-  {% endif %}
 
-  <div class="text-center mt-5">
-    <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-custom shadow">⬅ Back to Dashboard</a>
-    <a href="{{ url_for('resume') }}" class="btn btn-info btn-custom shadow">📄 Analyze Another Resume</a>
-    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-custom shadow">Logout</a>
-  </div>
 </div>
+{% endfor %}
+
+{% else %}
+
+<div class="summary-box text-center">
+    <h5 class="text-warning">⚠️ No job matches found</h5>
+    <p>Please upload and analyze your resume first.</p>
+</div>
+
+{% endif %}
+
+<!-- NAVIGATION BUTTONS -->
+<div class="text-center mt-5">
+    <a href="{{ url_for('resume_result') }}" class="action-btn">Resume Report</a>
+    <a href="{{ url_for('dashboard') }}" class="action-btn">Dashboard</a>
+    <a href="{{ url_for('resume') }}" class="action-btn">Analyze Another Resume</a>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger action-btn">Logout</a>
+</div>
+
+
+</div>
+
 </body>
 </html>

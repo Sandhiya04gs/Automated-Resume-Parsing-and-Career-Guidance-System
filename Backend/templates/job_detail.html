@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ role }} – Job Fit Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .container { margin-top: 40px; margin-bottom: 60px; }
+        .card { margin-bottom: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; }
+        .skill-list li { margin-bottom: 5px; }
+        .btn-custom { margin-right: 10px; margin-top: 10px; }
+        h2 { text-align: center; margin-bottom: 30px; }
+        #skillChart { height: 450px !important; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🔎 {{ role }} – Job Fit Analysis</h2>
+
+    <!-- Job Description -->
+    <div class="card">
+        <h4>Job Description</h4>
+        <p>{{ description }}</p>
+    </div>
+
+    <!-- Skill Match Chart -->
+    <div class="card">
+        <h4>Overall Skill Match</h4>
+        <canvas id="skillChart" width="400" height="350"></canvas>
+        <p class="mt-3"><strong>Career Readiness Index:</strong> {{ readiness }}%</p>
+        <p><strong>Interview Probability:</strong> {{ probability }}</p>
+    </div>
+
+    <!-- Matched Skills -->
+    <div class="card">
+        <h4>Matched Skills</h4>
+        {% if matched_skills %}
+        <ul class="skill-list text-success">
+            {% for skill in matched_skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>None of your skills match this role yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Missing / Weak Skills -->
+    <div class="card">
+        <h4>Missing / Weak Skills</h4>
+        {% if missing_skills %}
+        <ul class="skill-list text-danger">
+            {% for skill in missing_skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>🎉 You have all the required skills!</p>
+        {% endif %}
+    </div>
+
+    <!-- Resume Improvement Tips -->
+    <div class="card">
+        <h4>Resume Improvement Suggestions</h4>
+        {% if resume_actions %}
+        <ul class="skill-list">
+            {% for action in resume_actions %}
+            <li>{{ action }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No additional actions needed.</p>
+        {% endif %}
+    </div>
+
+    <!-- View Companies Button -->
+    <div class="text-center mt-4">
+        
+        <a href="{{ url_for('job_matching') }}" class="btn btn-secondary btn-custom">⬅ Back to Job Matches</a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-dark btn-custom">⬅ Dashboard</a>
+        <a href="{{ url_for('company_hiring', role=role.replace(' ', '_')) }}" class="btn btn-success mt-3">View Company Roles for {{ role }}</a>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script>
+const matchedSkills = {{ matched_skills | tojson }};
+const missingSkills = {{ missing_skills | tojson }};
+
+// Combine matched & missing skills
+const labels = matchedSkills.concat(missingSkills);
+const dataValues = matchedSkills.map(() => 100).concat(missingSkills.map(() => 30));
+
+const ctx = document.getElementById('skillChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Skill Match %',
+            data: dataValues,
+            backgroundColor: matchedSkills.map(() => 'rgba(40, 167, 69, 0.7)')
+                            .concat(missingSkills.map(() => 'rgba(220, 53, 69, 0.7)')),
+            borderColor: matchedSkills.map(() => 'rgba(40, 167, 69, 1)')
+                            .concat(missingSkills.map(() => 'rgba(220, 53, 69, 1)')),
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Skill Match Overview' }
+        },
+        scales: {
+            y: { beginAtZero: true, max: 100 }
+        }
+    }
+});
+</script>
+</body>
+</html>
