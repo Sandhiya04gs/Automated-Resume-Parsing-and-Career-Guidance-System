@@ -57,12 +57,7 @@ The system extracts relevant information from uploaded resumes, analyzes user sk
 - Improved job matching.
 - Advanced skill gap analysis.
 - Integration with job portals.
-- 
-## 🎥 Project Demo
-
-Watch the complete project demonstration:
-
-▶ Automated Resume Parsing and Career Guidance System – Watch Demo[(https://youtu.be/x0QxXeNZW5U)]
+  
 ## 👩‍💻 Developer
 
 **Sandhiya S.**
